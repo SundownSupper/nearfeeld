@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal lost — NEARFEELD</title>
+<meta name="theme-color" content="#0E0E0E">
+<link rel="icon" href="/nearfeeld/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E0E0E;--line:#262624;--paper:#F5F5F2;--fog:#D9D9D4;--muted:#8E8E89;--field:#8FA89D}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100svh;background:var(--ink);color:var(--paper);font-family:'Space Grotesk',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center;padding:24px;-webkit-font-smoothing:antialiased}
+  svg{width:120px;height:120px}
+  .arc{opacity:.15;animation:search 2.4s ease-in-out infinite}
+  .a2{animation-delay:.3s}.a3{animation-delay:.6s}
+  @keyframes search{0%,100%{opacity:.12}40%{opacity:.6}}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;font-size:11px}
+  h1{margin:0;font-size:clamp(40px,8vw,72px);font-weight:500;letter-spacing:-.02em;line-height:1}
+  p{margin:0;color:var(--fog);font-size:18px}
+  a{display:inline-block;margin-top:8px;color:var(--ink);background:var(--paper);text-decoration:none;padding:16px 28px;border-radius:999px}
+  a:hover{background:var(--field)}
+  :focus-visible{outline:2px solid var(--field);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){.arc{animation:none;opacity:.3}}
+</style>
+</head>
+<body>
+  <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+    <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
+    <path class="arc a1" d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path class="arc a2" d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path class="arc a3" d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+  </svg>
+  <span class="mono" style="color:var(--field)">Error 404</span>
+  <h1>Signal lost.</h1>
+  <p>This page drifted out of range.</p>
+  <a class="mono" href="/nearfeeld/">Return to base →</a>
+</body>
+</html>

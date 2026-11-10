@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NEARFEELD — Scent you carry</title>
 <meta name="description" content="Minimal fragrance accessories built around one refillable scent cell. SET 01 coming soon.">
+<meta name="theme-color" content="#0E0E0E">
+
+<!-- Social share preview (Instagram bio link, iMessage, X, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NEARFEELD">
+<meta property="og:title" content="NEARFEELD — Scent you carry">
+<meta property="og:description" content="One refillable scent cell. Five carriers. SET 01 coming soon.">
+<meta property="og:url" content="https://sundownsupper.github.io/nearfeeld/">
+<meta property="og:image" content="https://sundownsupper.github.io/nearfeeld/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <!-- ===================================================== -->
 <!--  EDIT YOUR LINKS HERE — only change the text in quotes -->
@@ -12,10 +25,11 @@
 <script>
 const LINKS = {
   waitlist:  "https://forms.gle/MtiXbZEpeR5JUUjt5",
-  instagram: "https://www.instagram.com/nearfeeld?psln=dXVxeGcwNWdzNjhy&utm_source=qr",
+  instagram: "https://www.instagram.com/nearfeeld/",
   tiktok:    "https://tiktok.com/@nearfeeld",
   email:     "mailto:nearfeeld@gmail.com"
 };
+document.documentElement.classList.add("js");
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("[data-link]").forEach(function (a) {
     var url = LINKS[a.getAttribute("data-link")];
@@ -29,179 +43,359 @@ document.addEventListener("DOMContentLoaded", function () {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ---------- NEARFEELD brand tokens ---------- */
   :root{
-    --ink:#0E0E0E; --panel:#161615; --line:#2E2E2C;
-    --paper:#F5F5F2; --fog:#D9D9D4; --muted:#A3A39E; --field:#8FA89D;
-    --mono:'JetBrains Mono', ui-monospace, monospace;
-    --sans:'Space Grotesk', system-ui, sans-serif;
+    --ink:#0E0E0E;      /* background — deep space */
+    --panel:#141413;    /* cards */
+    --line:#262624;     /* hairlines */
+    --paper:#F5F5F2;    /* primary text + icons */
+    --fog:#D9D9D4;      /* body text */
+    --muted:#8E8E89;    /* labels */
+    --field:#8FA89D;    /* sage — the scent cell, the signal */
+    --cell:#C9C9C3;     /* marks on the refill sheet */
+    --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --track:.22em;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth;scroll-padding-top:80px;background:var(--ink)}
+  body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
   a{color:inherit}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-  .mono{font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase}
+  ::selection{background:var(--field);color:var(--ink)}
+  :focus-visible{outline:2px solid var(--field);outline-offset:3px;border-radius:4px}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left))}
+  .mono{font-family:var(--mono);letter-spacing:var(--track);text-transform:uppercase}
+  .sage{color:var(--field)}
+  .muted{color:var(--muted)}
 
-  /* nav */
-  nav{display:flex;justify-content:space-between;align-items:center;padding:24px 0}
-  .wordmark{font-size:20px;font-weight:500;letter-spacing:.16em;text-decoration:none}
-  .social{display:flex;gap:20px;font-size:12px}
-  .social a{text-decoration:none;color:var(--muted);padding:12px 0}
-  .social a:hover{color:var(--paper)}
+  /* starfield */
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-  /* hero */
-  .hero{min-height:min(82vh,820px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:28px;padding:48px 0 72px}
-  .hero svg{width:min(52vw,260px);height:auto}
-  h1{margin:0;font-size:clamp(44px,9vw,96px);font-weight:500;letter-spacing:.01em;line-height:1}
-  .lede{margin:0;max-width:520px;font-size:clamp(18px,2.4vw,22px);line-height:1.5;color:var(--fog)}
-  .btn{display:inline-block;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:18px 32px;border-radius:999px;min-height:44px}
-  .btn:hover{background:var(--field)}
-  .tag{font-size:12px;color:var(--field)}
+  /* ---------- nav ---------- */
+  .nav{position:sticky;top:0;z-index:10;background:rgba(14,14,14,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+  .nav.scrolled{border-bottom-color:var(--line)}
+  .nav .wrap{display:flex;justify-content:space-between;align-items:center;height:68px}
+  .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--mono);font-size:13px;letter-spacing:.3em;font-weight:500}
+  .wordmark svg{width:26px;height:26px}
+  .links{display:flex;align-items:center;gap:28px;font-size:11px}
+  .links a{text-decoration:none;color:var(--muted);padding:12px 0;transition:color .2s}
+  .links a:hover{color:var(--paper)}
+  .links .pill{color:var(--paper);border:1px solid var(--line);border-radius:999px;padding:10px 18px;transition:border-color .2s,color .2s}
+  .links .pill:hover{border-color:var(--field);color:var(--field)}
+  @media (max-width:720px){ .links .hide-sm{display:none} .links{gap:18px} }
 
-  /* sections */
-  section{padding:72px 0;border-top:1px solid var(--line)}
-  .eyebrow{font-size:12px;color:var(--field);margin:0 0 12px}
-  h2{margin:0 0 40px;font-size:clamp(32px,5vw,52px);font-weight:500;line-height:1.05}
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:min(calc(100svh - 68px),960px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 0 40px;gap:28px}
+  .beacon{position:relative;width:clamp(140px,30vw,210px);aspect-ratio:1;margin-bottom:12px}
+  .beacon .mark{position:relative;width:100%;height:100%;z-index:1}
+  .orbits{position:absolute;width:420%;left:calc(26.67% - 210%);top:-160%;z-index:0;pointer-events:none;
+    -webkit-mask-image:radial-gradient(circle,#000 22%,transparent 68%);mask-image:radial-gradient(circle,#000 22%,transparent 68%)}
+  .orbits .spin{transform-box:view-box;transform-origin:center;animation:spin 60s linear infinite}
+  .orbits .spin.slow{animation-duration:140s;animation-direction:reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .mark .arc{animation:wave 3.6s ease-in-out infinite}
+  .mark .a2{animation-delay:.2s}
+  .mark .a3{animation-delay:.4s}
+  @keyframes wave{0%,60%,100%{opacity:1}18%{opacity:.25}}
 
-  /* products */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
-  .card{background:var(--panel);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:14px}
-  .card svg{width:100%;max-width:170px;height:auto;align-self:center}
-  .card .code{font-size:12px;color:var(--field)}
-  .card h3{margin:0;font-size:24px;font-weight:500}
+  .kicker{font-size:11px;color:var(--field);display:inline-flex;align-items:center;gap:10px}
+  .blip{width:7px;height:7px;border-radius:50%;background:var(--field);box-shadow:0 0 0 0 rgba(143,168,157,.6);animation:blip 2.4s ease-out infinite}
+  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(143,168,157,.55)}80%,100%{box-shadow:0 0 0 10px rgba(143,168,157,0)}}
+  h1{margin:0;font-size:clamp(48px,10vw,112px);font-weight:500;letter-spacing:-.02em;line-height:.95}
+  .lede{margin:0;max-width:500px;text-wrap:balance;font-size:clamp(17px,2.2vw,20px);line-height:1.55;color:var(--fog)}
+  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:18px 30px;border-radius:999px;min-height:48px;transition:background .25s,transform .25s}
+  .btn:hover{background:var(--field);transform:translateY(-1px)}
+  .btn .arrow{transition:transform .25s}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  .telemetry{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;margin-top:auto;padding-top:40px;font-size:10px;color:var(--muted)}
+  .telemetry span b{font-weight:400;color:var(--paper)}
+
+  /* ---------- sections ---------- */
+  section{padding:104px 0}
+  .sec-head{display:flex;align-items:center;gap:16px;font-size:11px;color:var(--muted);margin-bottom:56px}
+  .sec-head .idx{color:var(--field)}
+  .sec-head .rule{flex:1;height:1px;background:var(--line)}
+  h2{margin:0;text-wrap:balance;font-size:clamp(38px,6vw,68px);font-weight:500;letter-spacing:-.02em;line-height:1}
+
+  /* set overview — matches the IG "One cell. Five carriers." post */
+  .overview{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .overview .copy{display:flex;flex-direction:column;gap:40px}
+  .eyebrow{font-size:11px;color:var(--muted);margin:0 0 16px}
+  .manifest{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .manifest a{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:clamp(17px,1.8vw,20px);transition:padding .25s,color .25s}
+  .manifest .code{font-family:var(--mono);font-weight:500;letter-spacing:.06em;transition:color .25s}
+  .manifest a:hover{padding-left:8px;padding-right:8px}
+  .manifest a:hover .code{color:var(--field)}
+
+  .sheet-fig{margin:0}
+  .sheet{display:grid;grid-template-columns:1fr 1fr;aspect-ratio:3/2.1}
+  .sheet .c{background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#6A6A66;font-family:var(--mono);font-size:11px;letter-spacing:var(--track);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+  .sheet .c:first-child{border-radius:14px 0 0 14px;border-right:3px dotted #8A8A85}
+  .sheet .c:last-child{border-radius:0 14px 14px 0}
+  .sheet .c svg{width:clamp(36px,5vw,56px);height:auto}
+  .sheet-fig:hover .c:last-child{transform:translate(14px,4px) rotate(2deg)}
+  .sheet-fig figcaption{margin-top:20px;font-size:10px;color:var(--muted);line-height:1.8}
+
+  /* carriers — matches the IG product cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .card{position:relative;background:rgba(20,20,19,.86);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:12px;transition:border-color .3s,transform .3s}
+  .card::before,.card::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--field);border-style:solid;opacity:0;transition:opacity .3s}
+  .card::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+  .card::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+  .card:hover{border-color:#34342F;transform:translateY(-3px)}
+  .card:hover::before,.card:hover::after{opacity:1}
+  .card .top{display:flex;justify-content:space-between;font-size:11px}
+  .card .art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin:8px 0}
+  .card .art svg{width:78%;height:auto}
+  .card h3{margin:0;font-size:26px;font-weight:500;letter-spacing:-.01em}
   .card p{margin:0;font-size:15px;line-height:1.5;color:var(--fog)}
-  .card .soon{font-size:11px;color:var(--muted);margin-top:auto}
+  .card .soon{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-size:10px;color:var(--field)}
 
-  /* cell */
-  .cell{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
-  .sheet{flex:0 1 360px;aspect-ratio:3/2;background:var(--paper);border-radius:12px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
-  .sheet div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#5E5E5A;font-family:var(--mono);font-size:11px;letter-spacing:.12em}
-  .sheet div:first-child{border-right:3px dotted #8A8A85}
-  .sheet svg{width:44px;height:44px}
-  .steps{flex:1 1 320px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
-  .steps li{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--line);font-size:18px;line-height:1.4}
-  .steps span{font-family:var(--mono);color:var(--field);font-size:14px;padding-top:3px}
+  /* how it works */
+  .steps{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative}
+  .steps::before{content:"";position:absolute;top:6px;left:6px;right:6px;border-top:2px dotted var(--field);opacity:.7}
+  .steps li{position:relative;padding-top:40px}
+  .steps li::before{content:"";position:absolute;top:0;left:0;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--field)}
+  .steps .n{font-size:11px;color:var(--field)}
+  .steps h3{margin:14px 0 10px;font-size:30px;font-weight:500;letter-spacing:-.01em}
+  .steps p{margin:0;font-size:17px;line-height:1.55;color:var(--fog);max-width:320px}
 
-  /* cta + footer */
-  .cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
-  footer{border-top:1px solid var(--line);padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;font-size:12px;color:var(--muted)}
+  /* cta */
+  .cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px;padding:128px 0}
+  .cta .mark{width:64px;height:64px}
+  .cta p{margin:0;color:var(--fog);font-size:18px}
+  .cta .follow{font-size:11px;color:var(--muted);text-decoration:none;padding:12px 0}
+  .cta .follow:hover{color:var(--paper)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:32px 0 48px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:16px 32px;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
+  footer .status{display:inline-flex;align-items:center;gap:10px}
+  footer .social{display:flex;gap:24px}
   footer a{text-decoration:none;padding:12px 0}
   footer a:hover{color:var(--paper)}
+
+  /* scroll reveal (content stays visible without JS) */
+  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+  .js .reveal.in{opacity:1;transform:none}
+
+  /* ---------- mobile ---------- */
+  @media (max-width:860px){
+    section{padding:80px 0}
+    .overview{grid-template-columns:1fr;gap:48px}
+    .overview .copy{order:-1}
+    .steps{grid-template-columns:1fr;gap:36px;padding-left:36px}
+    .steps::before{top:6px;bottom:6px;left:6px;right:auto;border-top:0;border-left:2px dotted var(--field)}
+    .steps li{padding-top:0}
+    .steps li::before{left:-36px;top:2px}
+    .steps h3{margin-top:10px}
+    .telemetry{justify-content:center}
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns:1fr 1fr;gap:10px}
+    .card{padding:16px}
+    .card h3{font-size:20px}
+    .card p{font-size:13px}
+    .card .top{font-size:9px;letter-spacing:.14em}
+    .grid .card:last-child:nth-child(odd){grid-column:1/-1}
+    .grid .card:last-child:nth-child(odd) .art{aspect-ratio:auto;height:150px}
+    .links .hide-xs{display:none}
+    .wordmark{letter-spacing:.24em}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+    .js .reveal{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<canvas id="stars" aria-hidden="true"></canvas>
 
-<nav>
-  <a class="wordmark" href="#top">NEARFEELD</a>
-  <div class="social mono">
-    <a data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
-    <a data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+<!-- ================= NAV ================= -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="wordmark" href="#top" aria-label="NEARFEELD home">
+      <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="10" fill="#8FA89D"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="9" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="9" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="9" stroke-linecap="round"/></svg>
+      NEARFEELD
+    </a>
+    <div class="links mono">
+      <a class="hide-sm" href="#set01">Set 01</a>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-xs" data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a class="pill" data-link="waitlist" href="#" target="_blank" rel="noopener">Waitlist</a>
+    </div>
   </div>
 </nav>
 
+<div class="wrap">
+
+<!-- ================= HERO ================= -->
 <header class="hero" id="top">
-  <svg viewBox="0 0 120 120" fill="none" role="img" aria-label="NEARFEELD logo">
-    <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
-    <path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-    <path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-    <path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-  </svg>
+  <div class="beacon" aria-hidden="true">
+    <svg class="orbits" viewBox="-450 -450 900 900" fill="none">
+      <circle r="150" stroke="#262624" stroke-width="1.5"/>
+      <circle r="240" stroke="#262624" stroke-width="1.5" stroke-dasharray="2 10"/>
+      <circle r="340" stroke="#262624" stroke-width="1.5"/>
+      <circle r="430" stroke="#2E2E2C" stroke-width="10" stroke-dasharray="1.5 21.0"/>
+      <line x1="-445" y1="0" x2="-170" y2="0" stroke="#262624" stroke-width="1.5"/>
+      <g class="spin"><circle cx="240" cy="0" r="6" fill="#8FA89D"/></g>
+      <g class="spin slow"><circle cx="0" cy="-340" r="3.5" fill="#F5F5F2"/></g>
+    </svg>
+    <svg class="mark" viewBox="0 0 120 120" fill="none" role="img" aria-label="NEARFEELD logo">
+      <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
+      <path class="arc a1" d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+      <path class="arc a2" d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+      <path class="arc a3" d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <span class="kicker mono"><i class="blip"></i>SET 01 — Coming soon</span>
   <h1>Scent you carry.</h1>
   <p class="lede">Minimal fragrance accessories built around one refillable scent cell. Your perfume, everywhere you go.</p>
-  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist</a>
-  <span class="tag mono">SET 01 — Coming soon</span>
+  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist <span class="arrow">→</span></a>
+
+  <div class="telemetry mono" aria-hidden="true">
+    <span>Set <b>01</b></span>
+    <span>Carriers <b>05</b></span>
+    <span>Cell <b>R-01</b></span>
+    <span>Status <b class="sage">Pre-launch</b></span>
+  </div>
 </header>
 
+<!-- ================= SET 01 OVERVIEW ================= -->
 <section id="set01">
-  <p class="eyebrow mono">SET 01</p>
-  <h2>One cell. Five carriers.</h2>
+  <div class="sec-head mono reveal"><span class="idx">01</span><span>The system</span><span class="rule"></span><span>R-01</span></div>
+  <div class="overview">
+    <figure class="sheet-fig reveal">
+      <div class="sheet" role="img" aria-label="A refill sheet of two scent cells joined by a perforation line">
+        <div class="c">
+          <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
+          CELL 01
+        </div>
+        <div class="c">
+          <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
+          CELL 02
+        </div>
+      </div>
+      <figcaption class="mono">R-01 / Refill cells — snap along the perforation</figcaption>
+    </figure>
+
+    <div class="copy reveal">
+      <div>
+        <p class="eyebrow mono">SET 01</p>
+        <h2>One cell.<br>Five carriers.</h2>
+      </div>
+      <ul class="manifest">
+        <li><a href="#c-01"><span class="code">C-01</span><span>Card</span></a></li>
+        <li><a href="#s-01"><span class="code">S-01</span><span>Shoe insert</span></a></li>
+        <li><a href="#k-01"><span class="code">K-01</span><span>Keychain</span></a></li>
+        <li><a href="#v-01"><span class="code">V-01</span><span>Car vent</span></a></li>
+        <li><a href="#h-01"><span class="code">H-01</span><span>Hanger clip</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CARRIERS ================= -->
+<section id="carriers">
+  <div class="sec-head mono reveal"><span class="idx">02</span><span>Carriers</span><span class="rule"></span><span>05 units</span></div>
   <div class="grid">
 
-    <article class="card">
-      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-        <rect x="35" y="66" width="170" height="108" rx="12" stroke="#F5F5F2" stroke-width="4"/>
-        <path d="M104 66 A16 16 0 0 0 136 66" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="58" y1="100" x2="112" y2="100" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="58" y1="120" x2="112" y2="120" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="58" y1="140" x2="112" y2="140" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <rect x="136" y="84" width="50" height="72" rx="8" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="145" y1="120" x2="178" y2="120" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-      </svg>
-      <span class="code mono">C-01</span>
+    <article class="card reveal" id="c-01">
+      <div class="top mono"><span class="sage">C-01</span><span class="muted">01/05</span></div>
+      <div class="art">
+        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+          <rect x="35" y="66" width="170" height="108" rx="12" stroke="#F5F5F2" stroke-width="4"/>
+          <path d="M104 66 A16 16 0 0 0 136 66" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="58" y1="100" x2="112" y2="100" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="58" y1="120" x2="112" y2="120" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="58" y1="140" x2="112" y2="140" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <rect x="136" y="84" width="50" height="72" rx="8" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="145" y1="120" x2="178" y2="120" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+        </svg>
+      </div>
       <h3>Card</h3>
       <p>Slips into your wallet. Holds 2 cells.</p>
       <span class="soon mono">Coming soon</span>
     </article>
 
-    <article class="card">
-      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-        <circle cx="92" cy="34" r="9" stroke="#F5F5F2" stroke-width="4"/>
-        <rect x="62" y="46" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="80" y1="86" x2="104" y2="86" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="80" y1="106" x2="104" y2="106" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="80" y1="126" x2="104" y2="126" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="80" y1="166" x2="104" y2="166" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-        <circle cx="158" cy="50" r="9" stroke="#F5F5F2" stroke-width="4"/>
-        <rect x="128" y="62" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="146" y1="102" x2="170" y2="102" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="146" y1="122" x2="170" y2="122" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="146" y1="142" x2="170" y2="142" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <line x1="146" y1="182" x2="170" y2="182" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-      </svg>
-      <span class="code mono">S-01</span>
+    <article class="card reveal" id="s-01">
+      <div class="top mono"><span class="sage">S-01</span><span class="muted">02/05</span></div>
+      <div class="art">
+        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+          <circle cx="92" cy="34" r="9" stroke="#F5F5F2" stroke-width="4"/>
+          <rect x="62" y="46" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="80" y1="86" x2="104" y2="86" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="80" y1="106" x2="104" y2="106" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="80" y1="126" x2="104" y2="126" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="80" y1="166" x2="104" y2="166" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+          <circle cx="158" cy="50" r="9" stroke="#F5F5F2" stroke-width="4"/>
+          <rect x="128" y="62" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="146" y1="102" x2="170" y2="102" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="146" y1="122" x2="170" y2="122" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="146" y1="142" x2="170" y2="142" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <line x1="146" y1="182" x2="170" y2="182" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+        </svg>
+      </div>
       <h3>Shoe Insert</h3>
       <p>Slides into your sneakers. Fresh every wear.</p>
       <span class="soon mono">Coming soon</span>
     </article>
 
-    <article class="card">
-      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-        <circle cx="120" cy="44" r="20" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="120" y1="64" x2="120" y2="78" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <rect x="86" y="78" width="68" height="136" rx="14" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="95" y1="94" x2="95" y2="198" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
-        <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
-          <line x1="108" y1="100" x2="108" y2="116"/><line x1="124" y1="100" x2="124" y2="116"/><line x1="140" y1="100" x2="140" y2="116"/>
-          <line x1="108" y1="138" x2="108" y2="154"/><line x1="124" y1="138" x2="124" y2="154"/><line x1="140" y1="138" x2="140" y2="154"/>
-          <line x1="108" y1="176" x2="108" y2="192"/><line x1="124" y1="176" x2="124" y2="192"/><line x1="140" y1="176" x2="140" y2="192"/>
-        </g>
-      </svg>
-      <span class="code mono">K-01</span>
+    <article class="card reveal" id="k-01">
+      <div class="top mono"><span class="sage">K-01</span><span class="muted">03/05</span></div>
+      <div class="art">
+        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+          <circle cx="120" cy="44" r="20" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="120" y1="64" x2="120" y2="78" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <rect x="86" y="78" width="68" height="136" rx="14" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="95" y1="94" x2="95" y2="198" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
+          <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
+            <line x1="108" y1="100" x2="108" y2="116"/><line x1="124" y1="100" x2="124" y2="116"/><line x1="140" y1="100" x2="140" y2="116"/>
+            <line x1="108" y1="138" x2="108" y2="154"/><line x1="124" y1="138" x2="124" y2="154"/><line x1="140" y1="138" x2="140" y2="154"/>
+            <line x1="108" y1="176" x2="108" y2="192"/><line x1="124" y1="176" x2="124" y2="192"/><line x1="140" y1="176" x2="140" y2="192"/>
+          </g>
+        </svg>
+      </div>
       <h3>Keychain</h3>
       <p>Scent on your keys. Closable vent, 1 cell.</p>
       <span class="soon mono">Coming soon</span>
     </article>
 
-    <article class="card">
-      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-        <g stroke="#F5F5F2" stroke-width="4">
-          <rect x="68" y="56" width="26" height="14" rx="4"/><rect x="106" y="56" width="26" height="14" rx="4"/><rect x="144" y="56" width="26" height="14" rx="4"/>
-          <rect x="50" y="70" width="140" height="100" rx="12"/>
-        </g>
-        <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
-          <line x1="72" y1="88" x2="72" y2="102"/><line x1="96" y1="88" x2="96" y2="102"/><line x1="120" y1="88" x2="120" y2="102"/><line x1="144" y1="88" x2="144" y2="102"/>
-          <line x1="72" y1="113" x2="72" y2="127"/><line x1="96" y1="113" x2="96" y2="127"/><line x1="120" y1="113" x2="120" y2="127"/><line x1="144" y1="113" x2="144" y2="127"/>
-          <line x1="72" y1="138" x2="72" y2="152"/><line x1="96" y1="138" x2="96" y2="152"/><line x1="120" y1="138" x2="120" y2="152"/><line x1="144" y1="138" x2="144" y2="152"/>
-        </g>
-        <line x1="174" y1="84" x2="174" y2="156" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
-        <path d="M106 170 V194 Q106 204 116 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <path d="M134 170 V194 Q134 204 124 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-      <span class="code mono">V-01</span>
+    <article class="card reveal" id="v-01">
+      <div class="top mono"><span class="sage">V-01</span><span class="muted">04/05</span></div>
+      <div class="art">
+        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+          <g stroke="#F5F5F2" stroke-width="4">
+            <rect x="68" y="56" width="26" height="14" rx="4"/><rect x="106" y="56" width="26" height="14" rx="4"/><rect x="144" y="56" width="26" height="14" rx="4"/>
+            <rect x="50" y="70" width="140" height="100" rx="12"/>
+          </g>
+          <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
+            <line x1="72" y1="88" x2="72" y2="102"/><line x1="96" y1="88" x2="96" y2="102"/><line x1="120" y1="88" x2="120" y2="102"/><line x1="144" y1="88" x2="144" y2="102"/>
+            <line x1="72" y1="113" x2="72" y2="127"/><line x1="96" y1="113" x2="96" y2="127"/><line x1="120" y1="113" x2="120" y2="127"/><line x1="144" y1="113" x2="144" y2="127"/>
+            <line x1="72" y1="138" x2="72" y2="152"/><line x1="96" y1="138" x2="96" y2="152"/><line x1="120" y1="138" x2="120" y2="152"/><line x1="144" y1="138" x2="144" y2="152"/>
+          </g>
+          <line x1="174" y1="84" x2="174" y2="156" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
+          <path d="M106 170 V194 Q106 204 116 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <path d="M134 170 V194 Q134 204 124 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
       <h3>Car Vent</h3>
       <p>Clips to your vent. Adjustable ports, 2 cells.</p>
       <span class="soon mono">Coming soon</span>
     </article>
 
-    <article class="card">
-      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-        <path d="M120 90 V64 C120 50 136 50 136 38 C136 26 120 24 112 32" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        <path d="M120 90 L40 150 Q32 158 42 160 H198 Q208 158 200 150 Z" stroke="#F5F5F2" stroke-width="4" stroke-linejoin="round"/>
-        <rect x="104" y="78" width="32" height="44" rx="8" fill="#161615" stroke="#F5F5F2" stroke-width="4"/>
-        <line x1="112" y1="100" x2="128" y2="100" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-      </svg>
-      <span class="code mono">H-01</span>
+    <article class="card reveal" id="h-01">
+      <div class="top mono"><span class="sage">H-01</span><span class="muted">05/05</span></div>
+      <div class="art">
+        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+          <path d="M120 90 V64 C120 50 136 50 136 38 C136 26 120 24 112 32" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+          <path d="M120 90 L40 150 Q32 158 42 160 H198 Q208 158 200 150 Z" stroke="#F5F5F2" stroke-width="4" stroke-linejoin="round"/>
+          <rect x="104" y="78" width="32" height="44" rx="8" fill="#141413" stroke="#F5F5F2" stroke-width="4"/>
+          <line x1="112" y1="100" x2="128" y2="100" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+        </svg>
+      </div>
       <h3>Hanger Clip</h3>
       <p>Snaps onto any hanger. Scent what you wear next.</p>
       <span class="soon mono">Coming soon</span>
@@ -210,42 +404,141 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
 </section>
 
-<section id="cell">
-  <p class="eyebrow mono">R-01 / Refill cells</p>
-  <h2>How it works.</h2>
-  <div class="cell">
-    <div class="sheet" role="img" aria-label="Two refill cells joined by a perforation line">
-      <div>
-        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
-        CELL 01
-      </div>
-      <div>
-        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
-        CELL 02
-      </div>
-    </div>
-    <ol class="steps">
-      <li><span>01</span>Snap off a cell along the perforation.</li>
-      <li><span>02</span>Slide it into any NEARFEELD carrier.</li>
-      <li><span>03</span>Add a drop of your own perfume. Close the vent when you don't need it.</li>
-    </ol>
-  </div>
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how">
+  <div class="sec-head mono reveal"><span class="idx">03</span><span>How it works</span><span class="rule"></span><span>3 steps</span></div>
+  <h2 class="reveal">Snap. Slide. Scent.</h2>
+  <ol class="steps">
+    <li class="reveal"><span class="n mono">Step 01</span><h3>Snap</h3><p>Snap off a cell along the perforation.</p></li>
+    <li class="reveal"><span class="n mono">Step 02</span><h3>Slide</h3><p>Slide it into any NEARFEELD carrier.</p></li>
+    <li class="reveal"><span class="n mono">Step 03</span><h3>Scent</h3><p>Add a drop of your own perfume. Close the vent when you don't need it.</p></li>
+  </ol>
 </section>
 
-<section class="cta">
-  <h2 style="margin:0">Be first for SET 01.</h2>
-  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist</a>
+<!-- ================= CTA ================= -->
+<section class="cta reveal">
+  <svg class="mark" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+    <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
+    <path class="arc a1" d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path class="arc a2" d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path class="arc a3" d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+  </svg>
+  <h2>Be first for SET 01.</h2>
+  <p>Get the signal the moment it launches.</p>
+  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist <span class="arrow">→</span></a>
+  <a class="follow mono" data-link="instagram" href="#" target="_blank" rel="noopener">Follow @nearfeeld</a>
 </section>
 
+</div>
+
+<!-- ================= FOOTER ================= -->
 <footer>
-  <span class="mono">© 2026 NEARFEELD</span>
-  <div class="social mono">
-    <a data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
-    <a data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok</a>
-    <a data-link="email" href="#">Email</a>
+  <div class="wrap mono">
+    <span>© 2026 NEARFEELD</span>
+    <span class="status"><i class="blip"></i>Signal active</span>
+    <div class="social">
+      <a data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+      <a data-link="email" href="#">Email</a>
+    </div>
   </div>
 </footer>
 
-</div>
+<script>
+/* ---------- starfield: slow, sparse, drifts with scroll ---------- */
+(function () {
+  var c = document.getElementById("stars");
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var W = 0, H = 0, stars = [], meteor = null, nextMeteor = 4000;
+
+  function build() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    c.width = W * dpr; c.height = H * dpr;
+    c.style.width = W + "px"; c.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round((W * H) / 6500);
+    stars = [];
+    for (var i = 0; i < n; i++) {
+      var big = Math.random() < 0.08;
+      stars.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: big ? 1 + Math.random() * 0.7 : 0.3 + Math.random() * 0.7,
+        z: 0.2 + Math.random() * 0.8,
+        p: Math.random() * 6.283, s: 0.3 + Math.random() * 0.9,
+        sage: Math.random() < 0.07
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    var sy = window.scrollY || 0;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var y = (s.y - sy * s.z * 0.12) % H; if (y < 0) y += H;
+      var tw = reduce ? 0.75 : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 0.0012 * s.s + s.p));
+      ctx.globalAlpha = tw * s.z * 0.85;
+      ctx.fillStyle = s.sage ? "#8FA89D" : "#F5F5F2";
+      ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, 6.283); ctx.fill();
+    }
+    if (!reduce) drawMeteor(t);
+    ctx.globalAlpha = 1;
+  }
+
+  function drawMeteor(t) {
+    if (!meteor && t > nextMeteor) {
+      meteor = { x: Math.random() * W * 0.8 + W * 0.1, y: Math.random() * H * 0.4, a: 0.5 + Math.random() * 0.4, life: 0 };
+      nextMeteor = t + 7000 + Math.random() * 9000;
+    }
+    if (!meteor) return;
+    meteor.life += 16;
+    var k = meteor.life / 900; if (k >= 1) { meteor = null; return; }
+    var len = 120, dx = Math.cos(meteor.a), dy = Math.sin(meteor.a);
+    var hx = meteor.x + dx * k * 420, hy = meteor.y + dy * k * 420;
+    var g = ctx.createLinearGradient(hx, hy, hx - dx * len, hy - dy * len);
+    g.addColorStop(0, "rgba(245,245,242," + (0.8 * (1 - k)) + ")");
+    g.addColorStop(1, "rgba(245,245,242,0)");
+    ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx - dx * len, hy - dy * len); ctx.stroke();
+  }
+
+  build();
+  var lastW = W, lastH = H;
+  window.addEventListener("resize", function () {
+    // ignore the small height jumps from mobile URL bars
+    if (window.innerWidth !== lastW || Math.abs(window.innerHeight - lastH) > 150) {
+      build(); lastW = W; lastH = H; if (reduce) draw(0);
+    }
+  });
+  if (reduce) {
+    draw(0);
+    window.addEventListener("scroll", function () { draw(0); }, { passive: true });
+  } else {
+    (function loop(t) { draw(t || 0); requestAnimationFrame(loop); })();
+  }
+})();
+
+/* ---------- nav hairline + scroll reveal ---------- */
+(function () {
+  var nav = document.getElementById("nav");
+  function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  var items = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)) { items.forEach(function (el) { el.classList.add("in"); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  items.forEach(function (el, i) {
+    el.style.transitionDelay = (el.classList.contains("card") || el.parentElement.classList.contains("steps")) ? ((i % 5) * 70) + "ms" : "0ms";
+    io.observe(el);
+  });
+})();
+</script>
 </body>
 </html>
