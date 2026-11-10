@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEARFEELD — Scent you carry</title>
+<meta name="description" content="Minimal fragrance accessories built around one refillable scent cell. SET 01 coming soon.">
+
+<!-- ===================================================== -->
+<!--  EDIT YOUR LINKS HERE — only change the text in quotes -->
+<!-- ===================================================== -->
+<script>
+const LINKS = {
+  waitlist:  "https://forms.gle/YOUR-FORM-LINK",
+  instagram: "https://instagram.com/YOUR-HANDLE",
+  tiktok:    "https://tiktok.com/@YOUR-HANDLE",
+  email:     "mailto:YOUR-EMAIL@gmail.com"
+};
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-link]").forEach(function (a) {
+    var url = LINKS[a.getAttribute("data-link")];
+    if (url) a.setAttribute("href", url);
+  });
+});
+</script>
+<!-- ===================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E0E0E; --panel:#161615; --line:#2E2E2C;
+    --paper:#F5F5F2; --fog:#D9D9D4; --muted:#A3A39E; --field:#8FA89D;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --sans:'Space Grotesk', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase}
+
+  /* nav */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:24px 0}
+  .wordmark{font-size:20px;font-weight:500;letter-spacing:.16em;text-decoration:none}
+  .social{display:flex;gap:20px;font-size:12px}
+  .social a{text-decoration:none;color:var(--muted);padding:12px 0}
+  .social a:hover{color:var(--paper)}
+
+  /* hero */
+  .hero{min-height:min(82vh,820px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:28px;padding:48px 0 72px}
+  .hero svg{width:min(52vw,260px);height:auto}
+  h1{margin:0;font-size:clamp(44px,9vw,96px);font-weight:500;letter-spacing:.01em;line-height:1}
+  .lede{margin:0;max-width:520px;font-size:clamp(18px,2.4vw,22px);line-height:1.5;color:var(--fog)}
+  .btn{display:inline-block;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:18px 32px;border-radius:999px;min-height:44px}
+  .btn:hover{background:var(--field)}
+  .tag{font-size:12px;color:var(--field)}
+
+  /* sections */
+  section{padding:72px 0;border-top:1px solid var(--line)}
+  .eyebrow{font-size:12px;color:var(--field);margin:0 0 12px}
+  h2{margin:0 0 40px;font-size:clamp(32px,5vw,52px);font-weight:500;line-height:1.05}
+
+  /* products */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:14px}
+  .card svg{width:100%;max-width:170px;height:auto;align-self:center}
+  .card .code{font-size:12px;color:var(--field)}
+  .card h3{margin:0;font-size:24px;font-weight:500}
+  .card p{margin:0;font-size:15px;line-height:1.5;color:var(--fog)}
+  .card .soon{font-size:11px;color:var(--muted);margin-top:auto}
+
+  /* cell */
+  .cell{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+  .sheet{flex:0 1 360px;aspect-ratio:3/2;background:var(--paper);border-radius:12px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+  .sheet div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#5E5E5A;font-family:var(--mono);font-size:11px;letter-spacing:.12em}
+  .sheet div:first-child{border-right:3px dotted #8A8A85}
+  .sheet svg{width:44px;height:44px}
+  .steps{flex:1 1 320px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+  .steps li{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--line);font-size:18px;line-height:1.4}
+  .steps span{font-family:var(--mono);color:var(--field);font-size:14px;padding-top:3px}
+
+  /* cta + footer */
+  .cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+  footer{border-top:1px solid var(--line);padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;font-size:12px;color:var(--muted)}
+  footer a{text-decoration:none;padding:12px 0}
+  footer a:hover{color:var(--paper)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <a class="wordmark" href="#top">NEARFEELD</a>
+  <div class="social mono">
+    <a data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+    <a data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <svg viewBox="0 0 120 120" fill="none" role="img" aria-label="NEARFEELD logo">
+    <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
+    <path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+    <path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
+  </svg>
+  <h1>Scent you carry.</h1>
+  <p class="lede">Minimal fragrance accessories built around one refillable scent cell. Your perfume, everywhere you go.</p>
+  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist</a>
+  <span class="tag mono">SET 01 — Coming soon</span>
+</header>
+
+<section id="set01">
+  <p class="eyebrow mono">SET 01</p>
+  <h2>One cell. Five carriers.</h2>
+  <div class="grid">
+
+    <article class="card">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <rect x="35" y="66" width="170" height="108" rx="12" stroke="#F5F5F2" stroke-width="4"/>
+        <path d="M104 66 A16 16 0 0 0 136 66" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="58" y1="100" x2="112" y2="100" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="58" y1="120" x2="112" y2="120" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="58" y1="140" x2="112" y2="140" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <rect x="136" y="84" width="50" height="72" rx="8" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="145" y1="120" x2="178" y2="120" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+      </svg>
+      <span class="code mono">C-01</span>
+      <h3>Card</h3>
+      <p>Slips into your wallet. Holds 2 cells.</p>
+      <span class="soon mono">Coming soon</span>
+    </article>
+
+    <article class="card">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <circle cx="92" cy="34" r="9" stroke="#F5F5F2" stroke-width="4"/>
+        <rect x="62" y="46" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="80" y1="86" x2="104" y2="86" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="80" y1="106" x2="104" y2="106" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="80" y1="126" x2="104" y2="126" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="80" y1="166" x2="104" y2="166" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+        <circle cx="158" cy="50" r="9" stroke="#F5F5F2" stroke-width="4"/>
+        <rect x="128" y="62" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="146" y1="102" x2="170" y2="102" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="146" y1="122" x2="170" y2="122" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="146" y1="142" x2="170" y2="142" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <line x1="146" y1="182" x2="170" y2="182" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+      </svg>
+      <span class="code mono">S-01</span>
+      <h3>Shoe Insert</h3>
+      <p>Slides into your sneakers. Fresh every wear.</p>
+      <span class="soon mono">Coming soon</span>
+    </article>
+
+    <article class="card">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <circle cx="120" cy="44" r="20" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="120" y1="64" x2="120" y2="78" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <rect x="86" y="78" width="68" height="136" rx="14" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="95" y1="94" x2="95" y2="198" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
+        <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
+          <line x1="108" y1="100" x2="108" y2="116"/><line x1="124" y1="100" x2="124" y2="116"/><line x1="140" y1="100" x2="140" y2="116"/>
+          <line x1="108" y1="138" x2="108" y2="154"/><line x1="124" y1="138" x2="124" y2="154"/><line x1="140" y1="138" x2="140" y2="154"/>
+          <line x1="108" y1="176" x2="108" y2="192"/><line x1="124" y1="176" x2="124" y2="192"/><line x1="140" y1="176" x2="140" y2="192"/>
+        </g>
+      </svg>
+      <span class="code mono">K-01</span>
+      <h3>Keychain</h3>
+      <p>Scent on your keys. Closable vent, 1 cell.</p>
+      <span class="soon mono">Coming soon</span>
+    </article>
+
+    <article class="card">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <g stroke="#F5F5F2" stroke-width="4">
+          <rect x="68" y="56" width="26" height="14" rx="4"/><rect x="106" y="56" width="26" height="14" rx="4"/><rect x="144" y="56" width="26" height="14" rx="4"/>
+          <rect x="50" y="70" width="140" height="100" rx="12"/>
+        </g>
+        <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
+          <line x1="72" y1="88" x2="72" y2="102"/><line x1="96" y1="88" x2="96" y2="102"/><line x1="120" y1="88" x2="120" y2="102"/><line x1="144" y1="88" x2="144" y2="102"/>
+          <line x1="72" y1="113" x2="72" y2="127"/><line x1="96" y1="113" x2="96" y2="127"/><line x1="120" y1="113" x2="120" y2="127"/><line x1="144" y1="113" x2="144" y2="127"/>
+          <line x1="72" y1="138" x2="72" y2="152"/><line x1="96" y1="138" x2="96" y2="152"/><line x1="120" y1="138" x2="120" y2="152"/><line x1="144" y1="138" x2="144" y2="152"/>
+        </g>
+        <line x1="174" y1="84" x2="174" y2="156" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
+        <path d="M106 170 V194 Q106 204 116 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <path d="M134 170 V194 Q134 204 124 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <span class="code mono">V-01</span>
+      <h3>Car Vent</h3>
+      <p>Clips to your vent. Adjustable ports, 2 cells.</p>
+      <span class="soon mono">Coming soon</span>
+    </article>
+
+    <article class="card">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <path d="M120 90 V64 C120 50 136 50 136 38 C136 26 120 24 112 32" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
+        <path d="M120 90 L40 150 Q32 158 42 160 H198 Q208 158 200 150 Z" stroke="#F5F5F2" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="104" y="78" width="32" height="44" rx="8" fill="#161615" stroke="#F5F5F2" stroke-width="4"/>
+        <line x1="112" y1="100" x2="128" y2="100" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+      </svg>
+      <span class="code mono">H-01</span>
+      <h3>Hanger Clip</h3>
+      <p>Snaps onto any hanger. Scent what you wear next.</p>
+      <span class="soon mono">Coming soon</span>
+    </article>
+
+  </div>
+</section>
+
+<section id="cell">
+  <p class="eyebrow mono">R-01 / Refill cells</p>
+  <h2>How it works.</h2>
+  <div class="cell">
+    <div class="sheet" role="img" aria-label="Two refill cells joined by a perforation line">
+      <div>
+        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
+        CELL 01
+      </div>
+      <div>
+        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="32" cy="60" r="9" fill="#C9C9C3"/><path d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/><path d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#C9C9C3" stroke-width="8" stroke-linecap="round"/></svg>
+        CELL 02
+      </div>
+    </div>
+    <ol class="steps">
+      <li><span>01</span>Snap off a cell along the perforation.</li>
+      <li><span>02</span>Slide it into any NEARFEELD carrier.</li>
+      <li><span>03</span>Add a drop of your own perfume. Close the vent when you don't need it.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 style="margin:0">Be first for SET 01.</h2>
+  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist</a>
+</section>
+
+<footer>
+  <span class="mono">© 2026 NEARFEELD</span>
+  <div class="social mono">
+    <a data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+    <a data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+    <a data-link="email" href="#">Email</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
