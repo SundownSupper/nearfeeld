@@ -4,20 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NEARFEELD — Scent you carry</title>
-<meta name="description" content="Minimal fragrance accessories built around one refillable scent cell. SET 01 coming soon.">
+<meta name="description" content="Minimal 3D-printed carriers for your own perfume. Wallet, car, sneakers. SET 01 coming soon.">
 <meta name="theme-color" content="#0E0E0E">
 
 <!-- Social share preview (Instagram bio link, iMessage, X, etc.) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NEARFEELD">
 <meta property="og:title" content="NEARFEELD — Scent you carry">
-<meta property="og:description" content="One refillable scent cell. Five carriers. SET 01 coming soon.">
+<meta property="og:description" content="Card. Car vent. Shoe pod. Minimal carriers for your own perfume. SET 01 coming soon.">
 <meta property="og:url" content="https://sundownsupper.github.io/nearfeeld/">
 <meta property="og:image" content="https://sundownsupper.github.io/nearfeeld/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" as="image" href="assets/img/lineup.webp" imagesrcset="assets/img/lineup-1200.webp 1200w, assets/img/lineup.webp 2400w" imagesizes="(max-width: 1240px) 100vw, 1180px">
 
 <!-- ===================================================== -->
 <!--  EDIT YOUR LINKS HERE — only change the text in quotes -->
@@ -43,133 +44,177 @@ document.addEventListener("DOMContentLoaded", function () {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* ---------- NEARFEELD brand tokens ---------- */
+  /* ---------- NEARFEELD brand tokens (see BRAND.md) ---------- */
   :root{
     --ink:#0E0E0E;      /* background — deep space */
     --panel:#141413;    /* cards */
     --line:#262624;     /* hairlines */
-    --paper:#F5F5F2;    /* primary text + icons */
+    --paper:#F5F5F2;    /* headlines, icons */
     --fog:#D9D9D4;      /* body text */
     --muted:#8E8E89;    /* labels */
     --field:#8FA89D;    /* sage — the scent cell, the signal */
-    --cell:#C9C9C3;     /* marks on the refill sheet */
+    --cell:#C9C9C3;
     --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans:'Space Grotesk', system-ui, -apple-system, sans-serif;
     --track:.22em;
+    --ease:cubic-bezier(.2,.8,.2,1);
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth;scroll-padding-top:80px;background:var(--ink)}
+  html{scroll-behavior:smooth;scroll-padding-top:72px;background:var(--ink);overflow-x:clip}
   body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
   a{color:inherit}
+  img,video{display:block;max-width:100%}
   ::selection{background:var(--field);color:var(--ink)}
   :focus-visible{outline:2px solid var(--field);outline-offset:3px;border-radius:4px}
   .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left))}
   .mono{font-family:var(--mono);letter-spacing:var(--track);text-transform:uppercase}
   .sage{color:var(--field)}
   .muted{color:var(--muted)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-  /* starfield */
-  #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7}
 
   /* ---------- nav ---------- */
-  .nav{position:sticky;top:0;z-index:10;background:rgba(14,14,14,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+  .nav{position:sticky;top:0;z-index:20;background:rgba(14,14,14,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s}
   .nav.scrolled{border-bottom-color:var(--line)}
-  .nav .wrap{display:flex;justify-content:space-between;align-items:center;height:68px}
+  .nav .wrap{display:flex;justify-content:space-between;align-items:center;height:64px}
   .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--mono);font-size:13px;letter-spacing:.3em;font-weight:500}
-  .wordmark svg{width:26px;height:26px}
+  .wordmark svg{width:24px;height:24px}
   .links{display:flex;align-items:center;gap:28px;font-size:11px}
   .links a{text-decoration:none;color:var(--muted);padding:12px 0;transition:color .2s}
   .links a:hover{color:var(--paper)}
   .links .pill{color:var(--paper);border:1px solid var(--line);border-radius:999px;padding:10px 18px;transition:border-color .2s,color .2s}
   .links .pill:hover{border-color:var(--field);color:var(--field)}
-  @media (max-width:720px){ .links .hide-sm{display:none} .links{gap:18px} }
+  @media (max-width:820px){ .links .hide-sm{display:none} }
 
-  /* ---------- hero ---------- */
-  .hero{position:relative;min-height:min(calc(100svh - 68px),960px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 0 40px;gap:28px}
-  .beacon{position:relative;width:clamp(140px,30vw,210px);aspect-ratio:1;margin-bottom:12px}
-  .beacon .mark{position:relative;width:100%;height:100%;z-index:1}
-  .orbits{position:absolute;width:420%;left:calc(26.67% - 210%);top:-160%;z-index:0;pointer-events:none;
-    -webkit-mask-image:radial-gradient(circle,#000 22%,transparent 68%);mask-image:radial-gradient(circle,#000 22%,transparent 68%)}
-  .orbits .spin{transform-box:view-box;transform-origin:center;animation:spin 60s linear infinite}
-  .orbits .spin.slow{animation-duration:140s;animation-direction:reverse}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .mark .arc{animation:wave 3.6s ease-in-out infinite}
-  .mark .a2{animation-delay:.2s}
-  .mark .a3{animation-delay:.4s}
-  @keyframes wave{0%,60%,100%{opacity:1}18%{opacity:.25}}
-
-  .kicker{font-size:11px;color:var(--field);display:inline-flex;align-items:center;gap:10px}
-  .blip{width:7px;height:7px;border-radius:50%;background:var(--field);box-shadow:0 0 0 0 rgba(143,168,157,.6);animation:blip 2.4s ease-out infinite}
-  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(143,168,157,.55)}80%,100%{box-shadow:0 0 0 10px rgba(143,168,157,0)}}
-  h1{margin:0;font-size:clamp(48px,10vw,112px);font-weight:500;letter-spacing:-.02em;line-height:.95}
-  .lede{margin:0;max-width:500px;text-wrap:balance;font-size:clamp(17px,2.2vw,20px);line-height:1.55;color:var(--fog)}
-  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:18px 30px;border-radius:999px;min-height:48px;transition:background .25s,transform .25s}
-  .btn:hover{background:var(--field);transform:translateY(-1px)}
+  /* ---------- buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:17px 28px;border-radius:999px;min-height:48px;border:1px solid var(--paper);transition:background .25s,border-color .25s,color .25s,transform .25s}
+  .btn:hover{background:var(--field);border-color:var(--field);transform:translateY(-1px)}
   .btn .arrow{transition:transform .25s}
   .btn:hover .arrow{transform:translateX(3px)}
+  .btn.ghost{background:transparent;color:var(--paper);border-color:var(--line)}
+  .btn.ghost:hover{background:transparent;border-color:var(--field);color:var(--field)}
+  .btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 
-  .telemetry{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;margin-top:auto;padding-top:40px;font-size:10px;color:var(--muted)}
-  .telemetry span b{font-weight:400;color:var(--paper)}
+  .kicker{font-size:11px;color:var(--field);display:inline-flex;align-items:center;gap:10px}
+  .blip{width:7px;height:7px;border-radius:50%;background:var(--field);flex:none;animation:blip 2.4s ease-out infinite}
+  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(143,168,157,.55)}80%,100%{box-shadow:0 0 0 10px rgba(143,168,157,0)}}
+
+  /* ---------- hero ---------- */
+  .hero{text-align:center;padding:clamp(56px,9vw,104px) 0 0;display:flex;flex-direction:column;align-items:center;gap:26px}
+  h1{margin:0;font-size:clamp(52px,10.5vw,124px);font-weight:500;letter-spacing:-.035em;line-height:.92}
+  .lede{margin:0;max-width:520px;text-wrap:balance;font-size:clamp(17px,2.1vw,20px);line-height:1.55;color:var(--fog)}
+  .stage{position:relative;width:100%;margin-top:clamp(12px,3vw,32px)}
+  .stage img{width:100%;height:auto;aspect-ratio:12/5}
+  /* labels sit under each product in the lineup render */
+  .tags{position:absolute;inset:auto 0 17% 0;height:0}
+  .tag{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-size:10px;color:var(--muted);white-space:nowrap;transition:color .25s}
+  .tag b{font-weight:500;color:var(--field)}
+  .tag::before{content:"";width:1px;height:22px;background:var(--line);margin-bottom:4px;transition:background .25s}
+  .tag:hover{color:var(--paper)}
+  .tag:hover::before{background:var(--field)}
+  .telemetry{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;padding:22px 0;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+  .telemetry b{font-weight:400;color:var(--paper)}
+  @media (max-width:640px){ .stage{width:136%} .tags{bottom:15%} .telemetry{justify-content:center} }
 
   /* ---------- sections ---------- */
-  section{padding:104px 0}
-  .sec-head{display:flex;align-items:center;gap:16px;font-size:11px;color:var(--muted);margin-bottom:56px}
+  section{padding:clamp(80px,11vw,136px) 0}
+  .sec-head{display:flex;align-items:center;gap:16px;font-size:11px;color:var(--muted);margin-bottom:clamp(40px,6vw,72px)}
   .sec-head .idx{color:var(--field)}
   .sec-head .rule{flex:1;height:1px;background:var(--line)}
-  h2{margin:0;text-wrap:balance;font-size:clamp(38px,6vw,68px);font-weight:500;letter-spacing:-.02em;line-height:1}
+  h2{margin:0;text-wrap:balance;font-size:clamp(40px,6.2vw,76px);font-weight:500;letter-spacing:-.03em;line-height:.98}
+  .intro{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end;margin-bottom:clamp(48px,7vw,96px)}
+  .intro p{margin:0;font-size:18px;line-height:1.55;color:var(--fog);max-width:420px;justify-self:end}
 
-  /* set overview — matches the IG "One cell. Five carriers." post */
-  .overview{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-  .overview .copy{display:flex;flex-direction:column;gap:40px}
-  .eyebrow{font-size:11px;color:var(--muted);margin:0 0 16px}
-  .manifest{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-  .manifest a{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:clamp(17px,1.8vw,20px);transition:padding .25s,color .25s}
-  .manifest .code{font-family:var(--mono);font-weight:500;letter-spacing:.06em;transition:color .25s}
-  .manifest a:hover{padding-left:8px;padding-right:8px}
-  .manifest a:hover .code{color:var(--field)}
+  /* ---------- product rows ---------- */
+  .product{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(32px,6vw,88px);align-items:center;padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--line)}
+  .product:nth-of-type(even) .shot{order:2}
+  .shot{position:relative;margin:0;aspect-ratio:4/5;background:radial-gradient(120% 90% at 50% 38%,#1b1b1a 0%,var(--panel) 55%,#111110 100%);border:1px solid var(--line);overflow:hidden}
+  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform:scale(1.18);transition:opacity .6s var(--ease),transform 1.2s var(--ease)}
+  .shot img.alt{opacity:0}
+  .shot.show-alt img.main{opacity:0}
+  .shot.show-alt img.alt{opacity:1}
+  .product:hover .shot img{transform:scale(1.22)}
+  /* viewfinder corners */
+  .shot::before,.shot::after{content:"";position:absolute;width:18px;height:18px;border-color:var(--field);border-style:solid;opacity:.0;transition:opacity .4s;z-index:2}
+  .shot::before{top:12px;left:12px;border-width:1px 0 0 1px}
+  .shot::after{bottom:12px;right:12px;border-width:0 1px 1px 0}
+  .product:hover .shot::before,.product:hover .shot::after{opacity:1}
+  .shot figcaption{position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);z-index:3}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:rgba(14,14,14,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .seg button{all:unset;cursor:pointer;font:inherit;letter-spacing:inherit;padding:7px 12px;border-radius:999px;color:var(--muted);transition:background .25s,color .25s}
+  .seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--field);outline-offset:2px}
 
+  .info{display:flex;flex-direction:column;gap:26px}
+  .info .top{display:flex;justify-content:space-between;font-size:11px}
+  .info h3{margin:0;font-size:clamp(40px,5vw,60px);font-weight:500;letter-spacing:-.03em;line-height:1}
+  .info .line{margin:0;font-size:19px;line-height:1.5;color:var(--fog);max-width:420px}
+  .specs{margin:0;border-top:1px solid var(--line)}
+  .specs div{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .specs dt{font-family:var(--mono);font-size:10px;letter-spacing:var(--track);text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .specs dd{margin:0;font-size:15px;line-height:1.5;color:var(--paper)}
+  .info .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+  .soon{font-size:10px;color:var(--field);display:inline-flex;align-items:center;gap:10px}
+  .watch{font-size:11px;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:10px;padding:10px 0;transition:color .2s}
+  .watch:hover{color:var(--paper)}
+  .watch i{width:26px;height:26px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;transition:border-color .2s}
+  .watch:hover i{border-color:var(--field)}
+  .watch i::after{content:"";border-left:7px solid currentColor;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;margin-left:2px}
+
+  /* ---------- how it works ---------- */
+  .how{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,96px);align-items:center}
   .sheet-fig{margin:0}
   .sheet{display:grid;grid-template-columns:1fr 1fr;aspect-ratio:3/2.1}
-  .sheet .c{background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#6A6A66;font-family:var(--mono);font-size:11px;letter-spacing:var(--track);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+  .sheet .c{background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#6A6A66;font-family:var(--mono);font-size:11px;letter-spacing:var(--track);transition:transform .6s var(--ease)}
   .sheet .c:first-child{border-radius:14px 0 0 14px;border-right:3px dotted #8A8A85}
   .sheet .c:last-child{border-radius:0 14px 14px 0}
   .sheet .c svg{width:clamp(36px,5vw,56px);height:auto}
   .sheet-fig:hover .c:last-child{transform:translate(14px,4px) rotate(2deg)}
   .sheet-fig figcaption{margin-top:20px;font-size:10px;color:var(--muted);line-height:1.8}
+  .steps{list-style:none;margin:40px 0 0;padding:0 0 0 36px;display:grid;gap:30px;position:relative}
+  .steps::before{content:"";position:absolute;top:8px;bottom:8px;left:6px;border-left:2px dotted var(--field);opacity:.7}
+  .steps li{position:relative}
+  .steps li::before{content:"";position:absolute;left:-36px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--field)}
+  .steps .n{font-size:10px;color:var(--field)}
+  .steps h3{margin:8px 0 6px;font-size:26px;font-weight:500;letter-spacing:-.01em}
+  .steps p{margin:0;font-size:16px;line-height:1.55;color:var(--fog);max-width:360px}
 
-  /* carriers — matches the IG product cards */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-  .card{position:relative;background:rgba(20,20,19,.86);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:12px;transition:border-color .3s,transform .3s}
-  .card::before,.card::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--field);border-style:solid;opacity:0;transition:opacity .3s}
-  .card::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
-  .card::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
-  .card:hover{border-color:#34342F;transform:translateY(-3px)}
-  .card:hover::before,.card:hover::after{opacity:1}
-  .card .top{display:flex;justify-content:space-between;font-size:11px}
-  .card .art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin:8px 0}
-  .card .art svg{width:78%;height:auto}
-  .card h3{margin:0;font-size:26px;font-weight:500;letter-spacing:-.01em}
-  .card p{margin:0;font-size:15px;line-height:1.5;color:var(--fog)}
-  .card .soon{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-size:10px;color:var(--field)}
+  /* ---------- films ---------- */
+  .films{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .film{margin:0;display:flex;flex-direction:column;gap:14px}
+  .film .frame{position:relative;aspect-ratio:9/16;border:1px solid var(--line);background:var(--panel);overflow:hidden;cursor:pointer}
+  .film video{width:100%;height:100%;object-fit:cover}
+  .film .state{position:absolute;top:12px;left:12px;font-size:9px;color:var(--paper);background:rgba(14,14,14,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:8px}
+  .film .state i{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+  .film.playing .state i{background:var(--field)}
+  .film figcaption{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+  .film figcaption b{font-weight:500;color:var(--field)}
+  @media (max-width:860px){
+    .films{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 calc(-1 * max(20px,env(safe-area-inset-left)));padding:0 max(20px,env(safe-area-inset-left)) 8px;scrollbar-width:none}
+    .films::-webkit-scrollbar{display:none}
+    .film{flex:0 0 68%;scroll-snap-align:center}
+  }
 
-  /* how it works */
-  .steps{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative}
-  .steps::before{content:"";position:absolute;top:6px;left:6px;right:6px;border-top:2px dotted var(--field);opacity:.7}
-  .steps li{position:relative;padding-top:40px}
-  .steps li::before{content:"";position:absolute;top:0;left:0;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--field)}
-  .steps .n{font-size:11px;color:var(--field)}
-  .steps h3{margin:14px 0 10px;font-size:30px;font-weight:500;letter-spacing:-.01em}
-  .steps p{margin:0;font-size:17px;line-height:1.55;color:var(--fog);max-width:320px}
+  /* ---------- next in orbit ---------- */
+  .next{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .unit{display:flex;align-items:center;gap:22px;padding:22px;border:1px dashed var(--line);background:rgba(20,20,19,.5)}
+  .unit svg{width:72px;height:72px;flex:none;opacity:.85}
+  .unit .t{display:flex;flex-direction:column;gap:6px}
+  .unit .code{font-size:10px;color:var(--muted)}
+  .unit h3{margin:0;font-size:22px;font-weight:500;letter-spacing:-.01em}
+  .unit p{margin:0;font-size:14px;color:var(--fog)}
 
-  /* cta */
-  .cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px;padding:128px 0}
-  .cta .mark{width:64px;height:64px}
+  /* ---------- cta + footer ---------- */
+  .cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px;border-top:1px solid var(--line)}
+  .cta .mark{width:60px;height:60px}
   .cta p{margin:0;color:var(--fog);font-size:18px}
   .cta .follow{font-size:11px;color:var(--muted);text-decoration:none;padding:12px 0}
   .cta .follow:hover{color:var(--paper)}
-
-  /* footer */
-  footer{border-top:1px solid var(--line);padding:32px 0 48px}
+  .mark .arc{animation:wave 3.6s ease-in-out infinite}
+  .mark .a2{animation-delay:.2s}.mark .a3{animation-delay:.4s}
+  @keyframes wave{0%,60%,100%{opacity:1}18%{opacity:.25}}
+  footer{border-top:1px solid var(--line);padding:28px 0 44px}
   footer .wrap{display:flex;flex-wrap:wrap;gap:16px 32px;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
   footer .status{display:inline-flex;align-items:center;gap:10px}
   footer .social{display:flex;gap:24px}
@@ -177,31 +222,25 @@ document.addEventListener("DOMContentLoaded", function () {
   footer a:hover{color:var(--paper)}
 
   /* scroll reveal (content stays visible without JS) */
-  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+  .js .reveal{opacity:0;transform:translateY(20px);transition:opacity 1s ease,transform 1s var(--ease)}
   .js .reveal.in{opacity:1;transform:none}
 
   /* ---------- mobile ---------- */
   @media (max-width:860px){
-    section{padding:80px 0}
-    .overview{grid-template-columns:1fr;gap:48px}
-    .overview .copy{order:-1}
-    .steps{grid-template-columns:1fr;gap:36px;padding-left:36px}
-    .steps::before{top:6px;bottom:6px;left:6px;right:auto;border-top:0;border-left:2px dotted var(--field)}
-    .steps li{padding-top:0}
-    .steps li::before{left:-36px;top:2px}
-    .steps h3{margin-top:10px}
-    .telemetry{justify-content:center}
+    .intro{grid-template-columns:1fr;gap:20px}
+    .intro p{justify-self:start}
+    .product{grid-template-columns:1fr;gap:28px}
+    .product:nth-of-type(even) .shot{order:0}
+    .shot{aspect-ratio:1/1}
+    .how{grid-template-columns:1fr}
+    .next{grid-template-columns:1fr}
   }
   @media (max-width:480px){
-    .grid{grid-template-columns:1fr 1fr;gap:10px}
-    .card{padding:16px}
-    .card h3{font-size:20px}
-    .card p{font-size:13px}
-    .card .top{font-size:9px;letter-spacing:.14em}
-    .grid .card:last-child:nth-child(odd){grid-column:1/-1}
-    .grid .card:last-child:nth-child(odd) .art{aspect-ratio:auto;height:150px}
+    .links{gap:16px}
     .links .hide-xs{display:none}
     .wordmark{letter-spacing:.24em}
+    .specs div{grid-template-columns:96px 1fr}
+    .btns .btn{width:100%;justify-content:center}
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
@@ -223,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="links mono">
       <a class="hide-sm" href="#set01">Set 01</a>
       <a class="hide-sm" href="#how">How it works</a>
-      <a class="hide-xs" data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a class="hide-xs" href="#films">Films</a>
       <a class="pill" data-link="waitlist" href="#" target="_blank" rel="noopener">Waitlist</a>
     </div>
   </div>
@@ -233,40 +272,113 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
-  <div class="beacon" aria-hidden="true">
-    <svg class="orbits" viewBox="-450 -450 900 900" fill="none">
-      <circle r="150" stroke="#262624" stroke-width="1.5"/>
-      <circle r="240" stroke="#262624" stroke-width="1.5" stroke-dasharray="2 10"/>
-      <circle r="340" stroke="#262624" stroke-width="1.5"/>
-      <circle r="430" stroke="#2E2E2C" stroke-width="10" stroke-dasharray="1.5 21.0"/>
-      <line x1="-445" y1="0" x2="-170" y2="0" stroke="#262624" stroke-width="1.5"/>
-      <g class="spin"><circle cx="240" cy="0" r="6" fill="#8FA89D"/></g>
-      <g class="spin slow"><circle cx="0" cy="-340" r="3.5" fill="#F5F5F2"/></g>
-    </svg>
-    <svg class="mark" viewBox="0 0 120 120" fill="none" role="img" aria-label="NEARFEELD logo">
-      <circle cx="32" cy="60" r="9" fill="#8FA89D"/>
-      <path class="arc a1" d="M48.7 40.1 A26 26 0 0 1 48.7 79.9" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-      <path class="arc a2" d="M60.3 26.3 A44 44 0 0 1 60.3 93.7" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-      <path class="arc a3" d="M71.9 12.5 A62 62 0 0 1 71.9 107.5" stroke="#F5F5F2" stroke-width="7" stroke-linecap="round"/>
-    </svg>
-  </div>
   <span class="kicker mono"><i class="blip"></i>SET 01 — Coming soon</span>
   <h1>Scent you carry.</h1>
-  <p class="lede">Minimal fragrance accessories built around one refillable scent cell. Your perfume, everywhere you go.</p>
-  <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist <span class="arrow">→</span></a>
+  <p class="lede">Minimal printed carriers for your own perfume. In your wallet, your car, your sneakers.</p>
+  <div class="btns">
+    <a class="btn" data-link="waitlist" href="#" target="_blank" rel="noopener">Join the waitlist <span class="arrow">→</span></a>
+    <a class="btn ghost" href="#films">Watch the films</a>
+  </div>
+
+  <div class="stage">
+    <img src="assets/img/lineup.webp" srcset="assets/img/lineup-1200.webp 1200w, assets/img/lineup.webp 2400w" sizes="(max-width: 1240px) 100vw, 1180px"
+         width="2400" height="1000" alt="The three SET 01 carriers side by side: the C-01 card, the V-01 car vent and the S-01 shoe pod">
+    <div class="tags mono">
+      <a class="tag" href="#c-01" style="left:28%"><b>C-01</b><span>Card</span></a>
+      <a class="tag" href="#v-01" style="left:51.4%"><b>V-01</b><span>Car vent</span></a>
+      <a class="tag" href="#s-01" style="left:71.8%"><b>S-01</b><span>Shoe pod</span></a>
+    </div>
+  </div>
 
   <div class="telemetry mono" aria-hidden="true">
     <span>Set <b>01</b></span>
-    <span>Carriers <b>05</b></span>
-    <span>Cell <b>R-01</b></span>
+    <span>Carriers <b>03</b></span>
+    <span>Cells <b>R-01</b></span>
     <span>Status <b class="sage">Pre-launch</b></span>
   </div>
 </header>
 
-<!-- ================= SET 01 OVERVIEW ================= -->
+<!-- ================= SET 01 ================= -->
 <section id="set01">
-  <div class="sec-head mono reveal"><span class="idx">01</span><span>The system</span><span class="rule"></span><span>R-01</span></div>
-  <div class="overview">
+  <div class="sec-head mono reveal"><span class="idx">01</span><span>Set 01</span><span class="rule"></span><span>03 units</span></div>
+  <div class="intro reveal">
+    <h2>Three carriers.<br>Zero clutter.</h2>
+    <p>Each one is a single quiet object, printed in matte plastic. Slide in a scent cell, add a drop of the perfume you already own.</p>
+  </div>
+
+  <!-- C-01 -->
+  <article class="product" id="c-01">
+    <figure class="shot reveal">
+      <img class="main" src="assets/img/c01.webp" width="1400" height="1750" loading="lazy" alt="C-01 card with one scent cell sliding into its top slot">
+      <figcaption class="mono"><span>C-01 / Front</span></figcaption>
+    </figure>
+    <div class="info reveal">
+      <div class="top mono"><span class="sage">C-01</span><span class="muted">01/03</span></div>
+      <h3>Card</h3>
+      <p class="line">Slips into your wallet. Two cells load from the top, a fingernail window lets you pull them back out.</p>
+      <dl class="specs">
+        <div><dt>Size</dt><dd>85.5 × 53.8 × 2.5 mm, bank-card footprint</dd></div>
+        <div><dt>Cells</dt><dd>2, side by side</dd></div>
+        <div><dt>Loading</dt><dd>Top slot with catch dots</dd></div>
+        <div><dt>Build</dt><dd>One printed piece, matte PETG</dd></div>
+      </dl>
+      <div class="foot"><span class="soon mono"><i class="blip"></i>Coming soon</span><a class="watch mono" href="#film-c01" data-play="c01"><i></i>Watch film</a></div>
+    </div>
+  </article>
+
+  <!-- V-01 -->
+  <article class="product" id="v-01">
+    <figure class="shot reveal" data-shot>
+      <img class="main" src="assets/img/v01.webp" width="1400" height="1750" loading="lazy" alt="V-01 car vent freshener with its round vent dial">
+      <img class="alt" src="assets/img/v01_exploded.webp" width="1400" height="1750" loading="lazy" alt="V-01 exploded: dial, front shell, two scent cells, back shell and twist-lock clip">
+      <figcaption class="mono"><span>V-01</span>
+        <span class="seg" role="group" aria-label="View"><button type="button" aria-pressed="true" data-view="main">Assembled</button><button type="button" aria-pressed="false" data-view="alt">Exploded</button></span>
+      </figcaption>
+    </figure>
+    <div class="info reveal">
+      <div class="top mono"><span class="sage">V-01</span><span class="muted">02/03</span></div>
+      <h3>Car Vent</h3>
+      <p class="line">Clips to your air vent. Turn the dial to set the strength: open, half, closed.</p>
+      <dl class="specs">
+        <div><dt>Size</dt><dd>68 × 46 × 16 mm</dd></div>
+        <div><dt>Cells</dt><dd>2, side by side</dd></div>
+        <div><dt>Control</dt><dd>12-vent dial, clicks every 7.5°</dd></div>
+        <div><dt>Assembly</dt><dd>8 magnets, no screws</dd></div>
+        <div><dt>Mount</dt><dd>Removable twist-lock vent clip</dd></div>
+      </dl>
+      <div class="foot"><span class="soon mono"><i class="blip"></i>Coming soon</span><a class="watch mono" href="#film-v01" data-play="v01"><i></i>Watch film</a></div>
+    </div>
+  </article>
+
+  <!-- S-01 -->
+  <article class="product" id="s-01">
+    <figure class="shot reveal" data-shot>
+      <img class="main" src="assets/img/s01.webp" width="1400" height="1750" loading="lazy" alt="A pair of S-01 shoe pods, front and back, showing the vents and the tongue hook">
+      <img class="alt" src="assets/img/s01_load.webp" width="1400" height="1750" loading="lazy" alt="S-01 shoe pod with a scent cell sliding in through the top slot">
+      <figcaption class="mono"><span>S-01</span>
+        <span class="seg" role="group" aria-label="View"><button type="button" aria-pressed="true" data-view="main">Pair</button><button type="button" aria-pressed="false" data-view="alt">Loading</button></span>
+      </figcaption>
+    </figure>
+    <div class="info reveal">
+      <div class="top mono"><span class="sage">S-01</span><span class="muted">03/03</span></div>
+      <h3>Shoe Pod</h3>
+      <p class="line">Hooks over the tongue, tucks under the laces. Hang it overnight, fresh by morning.</p>
+      <dl class="specs">
+        <div><dt>Size</dt><dd>28 × 42 × 5.4 mm</dd></div>
+        <div><dt>Cells</dt><dd>1 per pod, sold as a pair</dd></div>
+        <div><dt>Fit</dt><dd>Padded tongues up to 13 mm</dd></div>
+        <div><dt>Vents</dt><dd>9 front, 9 back</dd></div>
+        <div><dt>Build</dt><dd>One printed piece, cell never touches the shoe</dd></div>
+      </dl>
+      <div class="foot"><span class="soon mono"><i class="blip"></i>Coming soon</span><a class="watch mono" href="#film-s01" data-play="s01"><i></i>Watch film</a></div>
+    </div>
+  </article>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how">
+  <div class="sec-head mono reveal"><span class="idx">02</span><span>How it works</span><span class="rule"></span><span>R-01</span></div>
+  <div class="how">
     <figure class="sheet-fig reveal">
       <div class="sheet" role="img" aria-label="A refill sheet of two scent cells joined by a perforation line">
         <div class="c">
@@ -280,139 +392,64 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <figcaption class="mono">R-01 / Refill cells — snap along the perforation</figcaption>
     </figure>
-
-    <div class="copy reveal">
-      <div>
-        <p class="eyebrow mono">SET 01</p>
-        <h2>One cell.<br>Five carriers.</h2>
-      </div>
-      <ul class="manifest">
-        <li><a href="#c-01"><span class="code">C-01</span><span>Card</span></a></li>
-        <li><a href="#s-01"><span class="code">S-01</span><span>Shoe insert</span></a></li>
-        <li><a href="#k-01"><span class="code">K-01</span><span>Keychain</span></a></li>
-        <li><a href="#v-01"><span class="code">V-01</span><span>Car vent</span></a></li>
-        <li><a href="#h-01"><span class="code">H-01</span><span>Hanger clip</span></a></li>
-      </ul>
+    <div class="reveal">
+      <h2>Snap. Slide. Scent.</h2>
+      <ol class="steps">
+        <li><span class="n mono">Step 01</span><h3>Snap</h3><p>Snap off a cell along the perforation.</p></li>
+        <li><span class="n mono">Step 02</span><h3>Slide</h3><p>Slide it into your carrier.</p></li>
+        <li><span class="n mono">Step 03</span><h3>Scent</h3><p>Add a drop of your own perfume. Swap the cell when it fades.</p></li>
+      </ol>
     </div>
   </div>
 </section>
 
-<!-- ================= CARRIERS ================= -->
-<section id="carriers">
-  <div class="sec-head mono reveal"><span class="idx">02</span><span>Carriers</span><span class="rule"></span><span>05 units</span></div>
-  <div class="grid">
-
-    <article class="card reveal" id="c-01">
-      <div class="top mono"><span class="sage">C-01</span><span class="muted">01/05</span></div>
-      <div class="art">
-        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-          <rect x="35" y="66" width="170" height="108" rx="12" stroke="#F5F5F2" stroke-width="4"/>
-          <path d="M104 66 A16 16 0 0 0 136 66" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="58" y1="100" x2="112" y2="100" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="58" y1="120" x2="112" y2="120" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="58" y1="140" x2="112" y2="140" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <rect x="136" y="84" width="50" height="72" rx="8" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="145" y1="120" x2="178" y2="120" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-        </svg>
-      </div>
-      <h3>Card</h3>
-      <p>Slips into your wallet. Holds 2 cells.</p>
-      <span class="soon mono">Coming soon</span>
-    </article>
-
-    <article class="card reveal" id="s-01">
-      <div class="top mono"><span class="sage">S-01</span><span class="muted">02/05</span></div>
-      <div class="art">
-        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-          <circle cx="92" cy="34" r="9" stroke="#F5F5F2" stroke-width="4"/>
-          <rect x="62" y="46" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="80" y1="86" x2="104" y2="86" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="80" y1="106" x2="104" y2="106" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="80" y1="126" x2="104" y2="126" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="80" y1="166" x2="104" y2="166" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-          <circle cx="158" cy="50" r="9" stroke="#F5F5F2" stroke-width="4"/>
-          <rect x="128" y="62" width="60" height="160" rx="30" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="146" y1="102" x2="170" y2="102" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="146" y1="122" x2="170" y2="122" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="146" y1="142" x2="170" y2="142" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <line x1="146" y1="182" x2="170" y2="182" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-        </svg>
-      </div>
-      <h3>Shoe Insert</h3>
-      <p>Slides into your sneakers. Fresh every wear.</p>
-      <span class="soon mono">Coming soon</span>
-    </article>
-
-    <article class="card reveal" id="k-01">
-      <div class="top mono"><span class="sage">K-01</span><span class="muted">03/05</span></div>
-      <div class="art">
-        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-          <circle cx="120" cy="44" r="20" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="120" y1="64" x2="120" y2="78" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <rect x="86" y="78" width="68" height="136" rx="14" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="95" y1="94" x2="95" y2="198" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
-          <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
-            <line x1="108" y1="100" x2="108" y2="116"/><line x1="124" y1="100" x2="124" y2="116"/><line x1="140" y1="100" x2="140" y2="116"/>
-            <line x1="108" y1="138" x2="108" y2="154"/><line x1="124" y1="138" x2="124" y2="154"/><line x1="140" y1="138" x2="140" y2="154"/>
-            <line x1="108" y1="176" x2="108" y2="192"/><line x1="124" y1="176" x2="124" y2="192"/><line x1="140" y1="176" x2="140" y2="192"/>
-          </g>
-        </svg>
-      </div>
-      <h3>Keychain</h3>
-      <p>Scent on your keys. Closable vent, 1 cell.</p>
-      <span class="soon mono">Coming soon</span>
-    </article>
-
-    <article class="card reveal" id="v-01">
-      <div class="top mono"><span class="sage">V-01</span><span class="muted">04/05</span></div>
-      <div class="art">
-        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-          <g stroke="#F5F5F2" stroke-width="4">
-            <rect x="68" y="56" width="26" height="14" rx="4"/><rect x="106" y="56" width="26" height="14" rx="4"/><rect x="144" y="56" width="26" height="14" rx="4"/>
-            <rect x="50" y="70" width="140" height="100" rx="12"/>
-          </g>
-          <g stroke="#F5F5F2" stroke-width="5" stroke-linecap="round">
-            <line x1="72" y1="88" x2="72" y2="102"/><line x1="96" y1="88" x2="96" y2="102"/><line x1="120" y1="88" x2="120" y2="102"/><line x1="144" y1="88" x2="144" y2="102"/>
-            <line x1="72" y1="113" x2="72" y2="127"/><line x1="96" y1="113" x2="96" y2="127"/><line x1="120" y1="113" x2="120" y2="127"/><line x1="144" y1="113" x2="144" y2="127"/>
-            <line x1="72" y1="138" x2="72" y2="152"/><line x1="96" y1="138" x2="96" y2="152"/><line x1="120" y1="138" x2="120" y2="152"/><line x1="144" y1="138" x2="144" y2="152"/>
-          </g>
-          <line x1="174" y1="84" x2="174" y2="156" stroke="#8FA89D" stroke-width="5" stroke-linecap="round"/>
-          <path d="M106 170 V194 Q106 204 116 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <path d="M134 170 V194 Q134 204 124 204" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <h3>Car Vent</h3>
-      <p>Clips to your vent. Adjustable ports, 2 cells.</p>
-      <span class="soon mono">Coming soon</span>
-    </article>
-
-    <article class="card reveal" id="h-01">
-      <div class="top mono"><span class="sage">H-01</span><span class="muted">05/05</span></div>
-      <div class="art">
-        <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
-          <path d="M120 90 V64 C120 50 136 50 136 38 C136 26 120 24 112 32" stroke="#F5F5F2" stroke-width="4" stroke-linecap="round"/>
-          <path d="M120 90 L40 150 Q32 158 42 160 H198 Q208 158 200 150 Z" stroke="#F5F5F2" stroke-width="4" stroke-linejoin="round"/>
-          <rect x="104" y="78" width="32" height="44" rx="8" fill="#141413" stroke="#F5F5F2" stroke-width="4"/>
-          <line x1="112" y1="100" x2="128" y2="100" stroke="#8FA89D" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 8"/>
-        </svg>
-      </div>
-      <h3>Hanger Clip</h3>
-      <p>Snaps onto any hanger. Scent what you wear next.</p>
-      <span class="soon mono">Coming soon</span>
-    </article>
-
+<!-- ================= FILMS ================= -->
+<section id="films">
+  <div class="sec-head mono reveal"><span class="idx">03</span><span>Films</span><span class="rule"></span><span>3 × 15 s</span></div>
+  <div class="films reveal">
+    <figure class="film" id="film-c01">
+      <div class="frame"><video muted loop playsinline preload="none" poster="assets/film/c01-poster.webp" aria-label="C-01 card film"><source src="assets/film/c01.mp4" type="video/mp4"></video><span class="state mono"><i></i>C-01</span></div>
+      <figcaption class="mono"><span><b>C-01</b> Card</span><span>0:15</span></figcaption>
+    </figure>
+    <figure class="film" id="film-v01">
+      <div class="frame"><video muted loop playsinline preload="none" poster="assets/film/v01-poster.webp" aria-label="V-01 car vent film"><source src="assets/film/v01.mp4" type="video/mp4"></video><span class="state mono"><i></i>V-01</span></div>
+      <figcaption class="mono"><span><b>V-01</b> Car vent</span><span>0:15</span></figcaption>
+    </figure>
+    <figure class="film" id="film-s01">
+      <div class="frame"><video muted loop playsinline preload="none" poster="assets/film/s01-poster.webp" aria-label="S-01 shoe pod film"><source src="assets/film/s01.mp4" type="video/mp4"></video><span class="state mono"><i></i>S-01</span></div>
+      <figcaption class="mono"><span><b>S-01</b> Shoe pod</span><span>0:15</span></figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- ================= HOW IT WORKS ================= -->
-<section id="how">
-  <div class="sec-head mono reveal"><span class="idx">03</span><span>How it works</span><span class="rule"></span><span>3 steps</span></div>
-  <h2 class="reveal">Snap. Slide. Scent.</h2>
-  <ol class="steps">
-    <li class="reveal"><span class="n mono">Step 01</span><h3>Snap</h3><p>Snap off a cell along the perforation.</p></li>
-    <li class="reveal"><span class="n mono">Step 02</span><h3>Slide</h3><p>Slide it into any NEARFEELD carrier.</p></li>
-    <li class="reveal"><span class="n mono">Step 03</span><h3>Scent</h3><p>Add a drop of your own perfume. Close the vent when you don't need it.</p></li>
-  </ol>
+<!-- ================= NEXT IN ORBIT ================= -->
+<section id="next">
+  <div class="sec-head mono reveal"><span class="idx">04</span><span>Next in orbit</span><span class="rule"></span><span>In development</span></div>
+  <div class="next">
+    <div class="unit reveal">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <circle cx="120" cy="44" r="20" stroke="#F5F5F2" stroke-width="5"/>
+        <line x1="120" y1="64" x2="120" y2="78" stroke="#F5F5F2" stroke-width="5" stroke-linecap="round"/>
+        <rect x="86" y="78" width="68" height="136" rx="14" stroke="#F5F5F2" stroke-width="5"/>
+        <line x1="95" y1="94" x2="95" y2="198" stroke="#8FA89D" stroke-width="6" stroke-linecap="round"/>
+        <g stroke="#F5F5F2" stroke-width="6" stroke-linecap="round">
+          <line x1="108" y1="100" x2="108" y2="116"/><line x1="124" y1="100" x2="124" y2="116"/><line x1="140" y1="100" x2="140" y2="116"/>
+          <line x1="108" y1="138" x2="108" y2="154"/><line x1="124" y1="138" x2="124" y2="154"/><line x1="140" y1="138" x2="140" y2="154"/>
+          <line x1="108" y1="176" x2="108" y2="192"/><line x1="124" y1="176" x2="124" y2="192"/><line x1="140" y1="176" x2="140" y2="192"/>
+        </g>
+      </svg>
+      <div class="t"><span class="code mono">K-01 — In development</span><h3>Keychain</h3><p>Scent on your keys. Closable vent.</p></div>
+    </div>
+    <div class="unit reveal">
+      <svg viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <path d="M120 90 V64 C120 50 136 50 136 38 C136 26 120 24 112 32" stroke="#F5F5F2" stroke-width="5" stroke-linecap="round"/>
+        <path d="M120 90 L40 150 Q32 158 42 160 H198 Q208 158 200 150 Z" stroke="#F5F5F2" stroke-width="5" stroke-linejoin="round"/>
+        <rect x="104" y="78" width="32" height="44" rx="8" fill="#141413" stroke="#F5F5F2" stroke-width="5"/>
+        <line x1="112" y1="100" x2="128" y2="100" stroke="#8FA89D" stroke-width="5" stroke-linecap="round" stroke-dasharray="0.1 8"/>
+      </svg>
+      <div class="t"><span class="code mono">H-01 — In development</span><h3>Hanger Clip</h3><p>Snaps onto any hanger. Scent what you wear next.</p></div>
+    </div>
+  </div>
 </section>
 
 <!-- ================= CTA ================= -->
@@ -451,92 +488,99 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!c || !c.getContext) return;
   var ctx = c.getContext("2d");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var W = 0, H = 0, stars = [], meteor = null, nextMeteor = 4000;
-
+  var W = 0, H = 0, stars = [], meteor = null, nextMeteor = 5000;
   function build() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth; H = window.innerHeight;
-    c.width = W * dpr; c.height = H * dpr;
-    c.style.width = W + "px"; c.style.height = H + "px";
+    c.width = W * dpr; c.height = H * dpr; c.style.width = W + "px"; c.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var n = Math.round((W * H) / 6500);
-    stars = [];
+    var n = Math.round((W * H) / 9000); stars = [];
     for (var i = 0; i < n; i++) {
       var big = Math.random() < 0.08;
-      stars.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: big ? 1 + Math.random() * 0.7 : 0.3 + Math.random() * 0.7,
-        z: 0.2 + Math.random() * 0.8,
-        p: Math.random() * 6.283, s: 0.3 + Math.random() * 0.9,
-        sage: Math.random() < 0.07
-      });
+      stars.push({ x: Math.random() * W, y: Math.random() * H, r: big ? 1 + Math.random() * 0.6 : 0.3 + Math.random() * 0.6,
+                   z: 0.2 + Math.random() * 0.8, p: Math.random() * 6.283, s: 0.3 + Math.random() * 0.9, sage: Math.random() < 0.07 });
     }
   }
-
   function draw(t) {
     ctx.clearRect(0, 0, W, H);
     var sy = window.scrollY || 0;
     for (var i = 0; i < stars.length; i++) {
-      var s = stars[i];
-      var y = (s.y - sy * s.z * 0.12) % H; if (y < 0) y += H;
+      var s = stars[i], y = (s.y - sy * s.z * 0.12) % H; if (y < 0) y += H;
       var tw = reduce ? 0.75 : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 0.0012 * s.s + s.p));
-      ctx.globalAlpha = tw * s.z * 0.85;
-      ctx.fillStyle = s.sage ? "#8FA89D" : "#F5F5F2";
+      ctx.globalAlpha = tw * s.z * 0.8; ctx.fillStyle = s.sage ? "#8FA89D" : "#F5F5F2";
       ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, 6.283); ctx.fill();
     }
     if (!reduce) drawMeteor(t);
     ctx.globalAlpha = 1;
   }
-
   function drawMeteor(t) {
-    if (!meteor && t > nextMeteor) {
-      meteor = { x: Math.random() * W * 0.8 + W * 0.1, y: Math.random() * H * 0.4, a: 0.5 + Math.random() * 0.4, life: 0 };
-      nextMeteor = t + 7000 + Math.random() * 9000;
-    }
+    if (!meteor && t > nextMeteor) { meteor = { x: Math.random() * W * 0.8 + W * 0.1, y: Math.random() * H * 0.4, a: 0.5 + Math.random() * 0.4, life: 0 }; nextMeteor = t + 9000 + Math.random() * 9000; }
     if (!meteor) return;
-    meteor.life += 16;
-    var k = meteor.life / 900; if (k >= 1) { meteor = null; return; }
-    var len = 120, dx = Math.cos(meteor.a), dy = Math.sin(meteor.a);
-    var hx = meteor.x + dx * k * 420, hy = meteor.y + dy * k * 420;
+    meteor.life += 16; var k = meteor.life / 900; if (k >= 1) { meteor = null; return; }
+    var len = 120, dx = Math.cos(meteor.a), dy = Math.sin(meteor.a), hx = meteor.x + dx * k * 420, hy = meteor.y + dy * k * 420;
     var g = ctx.createLinearGradient(hx, hy, hx - dx * len, hy - dy * len);
-    g.addColorStop(0, "rgba(245,245,242," + (0.8 * (1 - k)) + ")");
-    g.addColorStop(1, "rgba(245,245,242,0)");
+    g.addColorStop(0, "rgba(245,245,242," + (0.8 * (1 - k)) + ")"); g.addColorStop(1, "rgba(245,245,242,0)");
     ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = 1.2;
     ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx - dx * len, hy - dy * len); ctx.stroke();
   }
-
   build();
   var lastW = W, lastH = H;
   window.addEventListener("resize", function () {
-    // ignore the small height jumps from mobile URL bars
-    if (window.innerWidth !== lastW || Math.abs(window.innerHeight - lastH) > 150) {
-      build(); lastW = W; lastH = H; if (reduce) draw(0);
-    }
+    if (window.innerWidth !== lastW || Math.abs(window.innerHeight - lastH) > 150) { build(); lastW = W; lastH = H; if (reduce) draw(0); }
   });
-  if (reduce) {
-    draw(0);
-    window.addEventListener("scroll", function () { draw(0); }, { passive: true });
-  } else {
-    (function loop(t) { draw(t || 0); requestAnimationFrame(loop); })();
-  }
+  if (reduce) { draw(0); window.addEventListener("scroll", function () { draw(0); }, { passive: true }); }
+  else (function loop(t) { draw(t || 0); requestAnimationFrame(loop); })();
 })();
 
-/* ---------- nav hairline + scroll reveal ---------- */
+/* ---------- nav hairline, scroll reveal, view toggles, films ---------- */
 (function () {
   var nav = document.getElementById("nav");
   function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 8); }
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
+  // reveal
   var items = document.querySelectorAll(".reveal");
-  if (!("IntersectionObserver" in window)) { items.forEach(function (el) { el.classList.add("in"); }); return; }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    items.forEach(function (el) { io.observe(el); });
+  } else items.forEach(function (el) { el.classList.add("in"); });
+
+  // assembled / exploded toggles
+  document.querySelectorAll("[data-shot]").forEach(function (fig) {
+    fig.querySelectorAll("[data-view]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        fig.classList.toggle("show-alt", b.dataset.view === "alt");
+        fig.querySelectorAll("[data-view]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      });
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-  items.forEach(function (el, i) {
-    el.style.transitionDelay = (el.classList.contains("card") || el.parentElement.classList.contains("steps")) ? ((i % 5) * 70) + "ms" : "0ms";
-    io.observe(el);
+  });
+
+  // films: play while on screen, tap to pause / resume
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var films = document.querySelectorAll(".film");
+  function play(f) { var v = f.querySelector("video"); var p = v.play(); if (p && p.catch) p.catch(function () {}); f.classList.add("playing"); }
+  function pause(f) { f.querySelector("video").pause(); f.classList.remove("playing"); }
+  films.forEach(function (f) {
+    f.querySelector(".frame").addEventListener("click", function () { f.dataset.user = "1"; f.classList.contains("playing") ? pause(f) : play(f); });
+  });
+  if (!reduce && "IntersectionObserver" in window) {
+    var vio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var f = e.target;
+        if (e.isIntersecting && e.intersectionRatio > 0.6) { if (f.dataset.user !== "1") play(f); }
+        else pause(f);
+      });
+    }, { threshold: [0, 0.6] });
+    films.forEach(function (f) { vio.observe(f); });
+  }
+  // "Watch film" links: scroll to the film and start it
+  document.querySelectorAll("[data-play]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      var f = document.getElementById("film-" + a.dataset.play);
+      if (f) { f.dataset.user = "1"; setTimeout(function () { play(f); }, 500); }
+    });
   });
 })();
 </script>

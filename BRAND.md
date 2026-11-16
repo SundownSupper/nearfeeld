@@ -64,7 +64,7 @@ Every product gets a **letter code plus a set number**, like hardware part numbe
 | Code | Product |
 |---|---|
 | C-01 | Card |
-| S-01 | Shoe Insert |
+| S-01 | Shoe Pod |
 | K-01 | Keychain |
 | V-01 | Car Vent |
 | H-01 | Hanger Clip |
